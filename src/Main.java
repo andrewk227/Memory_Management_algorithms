@@ -84,6 +84,7 @@ public class Main {
             {
                 size+=partitionsVector.get(i).getPartitionSize();
                 partitionsVector.remove(i);
+                i--;
             }
         }
         Partitions newPar = new Partitions("p",size);
@@ -129,7 +130,7 @@ public class Main {
             if (partitionsVector.get(i).getP()!=null)
                 System.out.println(partitionsVector.get(i).getP().getProcessName());
         }
-        System.out.println(partitionsVector.get(6).getP()==null);
+
         System.out.println("Do you want to compact ? 1.yes 2.no ");
         int choice;
         choice = input.nextInt();
@@ -141,7 +142,17 @@ public class Main {
         {
             System.out.println(partitionsVector.get(i).getPartitionName()+" "+partitionsVector.get(i).getPartitionSize());
         }
+        System.out.println("First Fit: ");
         FirstFit();
+        System.out.println("Do you want to compact ? 1.yes 2.no ");
+        choice = input.nextInt();
+        if (choice==1)
+            Compaction();
+
+        for(int i=0;i<partitionsVector.size();i++)
+        {
+            System.out.println(partitionsVector.get(i).getPartitionName()+" "+partitionsVector.get(i).getPartitionSize());
+        }
     }
 }
 //6
