@@ -1,6 +1,7 @@
 import java.util.Vector;
 public class Partitions {
     private String partitionName;
+    private int partitionID;
     private int partitionSize;
     private static int ID=-1;
     private Process p;
@@ -13,7 +14,9 @@ public class Partitions {
         this.partitionName = partitionName+String.valueOf(ID);
         this.partitionSize=partitionSize;
         this.p=null;
+        this.partitionID=ID;
     }
+    int getPartitionID() {return partitionID;}
     String getPartitionName() {return partitionName;}
     int getPartitionSize(){return partitionSize;}
     void setPartitionName(String partitionName){this.partitionName=partitionName;}

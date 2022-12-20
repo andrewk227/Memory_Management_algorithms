@@ -1,10 +1,15 @@
 import java.util.Scanner;
 import java.util.Vector;
-import java.math.*;
+
 public class Main {
     public static Vector<Partitions> partitionsVector=new Vector<>();
     public static Vector<Process> processVector=new Vector<>();
     public static Vector<Process> UnAllocatedProcesses=new Vector<>();
+    public static String partitionName;
+
+
+    static int externalFragmentsize;
+    static Partitions partition;
     public static void BestFit(Vector <Process> proVec )
     {
         for (int i=0;i<proVec.size();i++)
@@ -37,7 +42,39 @@ public class Main {
             }
         }
     }
-
+    public static void FirstFit() {
+       // externalFragmentName = partitionsVector.lastElement().getPartitionID();
+        int processVectorSize=processVector.size();
+        for (int i = 0; i < processVectorSize; i++){
+            for (int j = 0; j < partitionsVector.size(); j++) {
+                if (processVector.get(i).getProcessSize() <= partitionsVector.get(j).getPartitionSize()) {
+                    externalFragmentsize = partitionsVector.get(j).getPartitionSize() - processVector.get(i).getProcessSize();
+                    partitionsVector.get(j).setPartitionSize(processVector.get(i).getProcessSize());
+                    partitionsVector.get(j).setP(processVector.get(i));
+                    //externalFragmentName++;
+                    partition = new Partitions(partitionName, externalFragmentsize);
+                    partitionsVector.add(j + 1, partition);
+                    processVector.get(i).flag=true;
+                    break;
+                }
+            }
+        }
+        for (int j = 0; j < partitionsVector.size(); j++) {
+            if (partitionsVector.get(j).getP() != null)
+                System.out.print(partitionsVector.get(j).getPartitionName() + "  " + partitionsVector.get(j).getPartitionSize() + "  " + partitionsVector.get(j).getP().getProcessName() + "\n");
+            else {
+                System.out.print(partitionsVector.get(j).getPartitionName() + "  " + partitionsVector.get(j).getPartitionSize() + " " + "external fragment" + "\n");
+            }
+        }
+        for(int i=0;i<processVector.size();i++)
+        {
+            if(processVector.get(i).flag==false)
+            {
+                UnAllocatedProcesses.add(processVector.get(i));
+                System.out.print("process "+processVector.get(i).getProcessName()+" not allocated");
+            }
+        }
+    }
     public static void Compaction()
     {
         int size=0;
@@ -104,6 +141,7 @@ public class Main {
         {
             System.out.println(partitionsVector.get(i).getPartitionName()+" "+partitionsVector.get(i).getPartitionSize());
         }
+        FirstFit();
     }
 }
 //6
