@@ -89,7 +89,6 @@ public class Main {
         }
         Partitions newPar = new Partitions("p",size);
         partitionsVector.add(newPar);
-        BestFit(UnAllocatedProcesses);
     }
 
 
@@ -135,7 +134,11 @@ public class Main {
         int choice;
         choice = input.nextInt();
         if (choice==1)
+        {
             Compaction();
+            BestFit(UnAllocatedProcesses);
+        }
+
 
 
         for(int i=0;i<partitionsVector.size();i++)
@@ -147,7 +150,11 @@ public class Main {
         System.out.println("Do you want to compact ? 1.yes 2.no ");
         choice = input.nextInt();
         if (choice==1)
+        {
             Compaction();
+            //Need to call First Fit Function Again for the unAllocatedVector
+            //FirstFit(UnAllocatedProcesses);
+        }
 
         for(int i=0;i<partitionsVector.size();i++)
         {
