@@ -6,8 +6,6 @@ public class Main {
     public static Vector<Process> processVector=new Vector<>();
     public static Vector<Process> UnAllocatedProcesses=new Vector<>();
     public static String partitionName;
-
-
     static int externalFragmentsize;
     static Partitions partition;
     public static void BestFit(Vector <Process> proVec )
@@ -32,7 +30,7 @@ public class Main {
                 partitionsVector.get(idx).setP(proVec.get(i));
                 Partitions split = partitionsVector.get(idx).Update_Create();
                 if(split != null)
-                    partitionsVector.add(split);
+                    partitionsVector.insertElementAt(split,idx+1);
             }
             else
             {
@@ -42,7 +40,8 @@ public class Main {
             }
         }
     }
-    public static void FirstFit() {
+    public static void FirstFit()
+    {
        // externalFragmentName = partitionsVector.lastElement().getPartitionID();
         int processVectorSize=processVector.size();
         for (int i = 0; i < processVectorSize; i++){
@@ -97,6 +96,8 @@ public class Main {
         Scanner input=  new Scanner(System.in);
         int  noOfPartitions,partitionSize,noOfProcesses,processSize;
         String partitionName,processName;
+
+        //Entering data of partitions
         System.out.println("Enter number of partitions ");
         noOfPartitions = input.nextInt();
 
@@ -108,10 +109,9 @@ public class Main {
             Partitions p=new Partitions(partitionName,partitionSize);
             partitionsVector.add(p);
         }
-       /* for(int i=0;i<noOfPartitions;i++)
-        {
-            System.out.print(partitionsVector.get(i).getPartitionName()+""+partitionsVector.get(i).getPartitionSize());
-        }*/
+
+
+        //Entering data of processes
         System.out.println("Enter number of Processes ");
         noOfProcesses=input.nextInt();
 
@@ -122,44 +122,77 @@ public class Main {
             Process process=new Process(processName,processSize);
             processVector.add(process);
         }
-        BestFit(processVector);
+
+
+        //select which policy we will process
+        System.out.println("Select the policy you want to apply:");
+        System.out.println("1.First Fit");
+        System.out.println("2.Best Fit");
+        System.out.println("3.Worst Fit");
+
+        int selector;
+        selector=input.nextInt();
+        if (selector == 1)
+        {
+            FirstFit();
+        }
+        else if(selector==2)
+        {
+            BestFit(processVector);
+        }
+        else if(selector==3)
+        {
+            //worstfit
+        }
+        else
+            System.out.println("Selection out of bound");
+
+
+
+        //Print all details about memory management
+        //and how the process allocated to partitions due to which algorithm we choose
         for (int i=0;i<partitionsVector.size();i++)
         {
-            System.out.println(partitionsVector.get(i).getPartitionName()+" "+partitionsVector.get(i).getPartitionSize()+" ");
+            System.out.print(partitionsVector.get(i).getPartitionName()+"  ("+partitionsVector.get(i).getPartitionSize()+"KB)  "+"=>  ");
             if (partitionsVector.get(i).getP()!=null)
                 System.out.println(partitionsVector.get(i).getP().getProcessName());
+            else
+                System.out.println("external fragment");
         }
 
+
+        //Asking for compaction "as option for the user"
         System.out.println("Do you want to compact ? 1.yes 2.no ");
         int choice;
         choice = input.nextInt();
         if (choice==1)
         {
             Compaction();
-            BestFit(UnAllocatedProcesses);
+            if (selector == 1)
+            {
+                FirstFit();
+            }
+            else if(selector==2)
+            {
+                BestFit(UnAllocatedProcesses);
+            }
+            else if(selector==3)
+            {
+                //worstfit
+            }
+            else
+                System.out.println("Selection out of bound");
+
         }
 
-
-
-        for(int i=0;i<partitionsVector.size();i++)
-        {
-            System.out.println(partitionsVector.get(i).getPartitionName()+" "+partitionsVector.get(i).getPartitionSize());
-        }
-        System.out.println("First Fit: ");
-        FirstFit();
-        System.out.println("Do you want to compact ? 1.yes 2.no ");
-        choice = input.nextInt();
-        if (choice==1)
-        {
-            Compaction();
-            //Need to call First Fit Function Again for the unAllocatedVector
-            //FirstFit(UnAllocatedProcesses);
+        for (int j = 0; j < partitionsVector.size(); j++) {
+            if (partitionsVector.get(j).getP() != null)
+                System.out.print(partitionsVector.get(j).getPartitionName() + "  (" + partitionsVector.get(j).getPartitionSize() + "KB)   "+"=>  " + partitionsVector.get(j).getP().getProcessName() + "\n");
+            else {
+                System.out.print(partitionsVector.get(j).getPartitionName() + "   (" + partitionsVector.get(j).getPartitionSize() + "KB)  " + "=>  " + "external fragment" + "\n");
+            }
         }
 
-        for(int i=0;i<partitionsVector.size();i++)
-        {
-            System.out.println(partitionsVector.get(i).getPartitionName()+" "+partitionsVector.get(i).getPartitionSize());
-        }
     }
 }
 //6
