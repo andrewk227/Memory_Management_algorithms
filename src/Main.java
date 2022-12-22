@@ -39,6 +39,45 @@ public class Main {
             }
         }
     }
+    public static void worstFit(int maxPartitionSize,Vector <Process> proVec)
+    {
+       // externalFragmentName = partitionsVector.lastElement().getPartitionName();
+
+        for (int i=0;i< proVec.size();i++)
+        {
+            for(int j=0;j< partitionsVector.size();j++)
+            {
+                if (proVec.get(i).getProcessSize() <= maxPartitionSize && partitionsVector.get(j).getPartitionSize()==maxPartitionSize)
+                {
+                    externalFragmentsize = partitionsVector.get(j).getPartitionSize() - proVec.get(i).getProcessSize();
+                    partitionsVector.get(j).setPartitionSize(proVec.get(i).getProcessSize());
+                    partitionsVector.get(j).setP(proVec.get(i));
+                    partition = new Partitions("p", externalFragmentsize);
+                    partitionsVector.add(j + 1, partition);
+                    proVec.get(i).flag=true;
+                    maxPartitionSize=0;
+                    for (int k=0;k< partitionsVector.size();k++)
+                    {
+                        if(partitionsVector.get(k).getPartitionSize()>maxPartitionSize &&partitionsVector.get(k).getP()==null )
+                        {
+                            maxPartitionSize=partitionsVector.get(k).getPartitionSize();
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        for(int i=0;i<proVec.size();i++)
+        {
+            if(proVec.get(i).flag==false)
+            {
+                UnAllocatedProcesses.add(proVec.get(i));
+                System.out.println("process "+proVec.get(i).getProcessName()+" not allocated");
+            }
+        }
+    }
+
+
     public static void FirstFit(Vector<Process> Pvector)
     {
        // externalFragmentName = partitionsVector.lastElement().getPartitionID();
@@ -49,7 +88,6 @@ public class Main {
                     externalFragmentsize = partitionsVector.get(j).getPartitionSize() - Pvector.get(i).getProcessSize();
                     partitionsVector.get(j).setPartitionSize(Pvector.get(i).getProcessSize());
                     partitionsVector.get(j).setP(Pvector.get(i));
-                    //externalFragmentName++;
                     partition = new Partitions("p", externalFragmentsize);
                     partitionsVector.add(j + 1, partition);
                     Pvector.get(i).flag=true;
@@ -86,7 +124,7 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner input=  new Scanner(System.in);
-        int  noOfPartitions,partitionSize,noOfProcesses,processSize;
+        int  noOfPartitions,partitionSize,noOfProcesses,processSize,maxPartitionSize=0;
         String partitionName,processName;
 
         //Entering data of partitions
@@ -98,6 +136,8 @@ public class Main {
         {
             partitionName=input.next();
             partitionSize=input.nextInt();
+            if(partitionSize>maxPartitionSize)
+            {maxPartitionSize=partitionSize;}
             Partitions p=new Partitions(partitionName,partitionSize);
             partitionsVector.add(p);
         }
@@ -134,7 +174,7 @@ public class Main {
         }
         else if(selector==3)
         {
-            //worstfit
+            worstFit(maxPartitionSize,processVector);
         }
         else
             System.out.println("Selection out of bound");
@@ -170,7 +210,7 @@ public class Main {
             }
             else if(selector==3)
             {
-                //worstfit
+                worstFit(maxPartitionSize,UnAllocatedProcesses);
             }
             else
                 System.out.println("Selection out of bound");
@@ -188,12 +228,12 @@ public class Main {
     }
 }
 //6
-//p 90
-//p 20
-//p 5
-//p 30 p 120 p 80
-//4
-//pro1 15
-//pro2 90
-//pro3 30
-// pro4 100
+////p 90
+////p 20
+////p 5
+////p 30 p 120 p 80
+////4
+////pro1 15
+////pro2 90
+////pro3 30
+//// pro4 100
