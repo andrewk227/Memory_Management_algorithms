@@ -33,9 +33,13 @@ public class Main {
             }
             else
             {
-                UnAllocatedProcesses.add(proVec.get(i));
-                proVec.remove(i);
-                System.out.println(proVec.get(i).getProcessName() + "can not be allocated");
+                if(proVec != UnAllocatedProcesses)
+                {
+                    UnAllocatedProcesses.add(proVec.get(i));
+                    proVec.remove(i);
+                    System.out.println(proVec.get(i).getProcessName() + "can not be allocated");
+                }
+
             }
         }
     }
@@ -67,14 +71,18 @@ public class Main {
                 }
             }
         }
-        for(int i=0;i<proVec.size();i++)
+        if(proVec != UnAllocatedProcesses)
         {
-            if(proVec.get(i).flag==false)
+            for(int i=0;i<proVec.size();i++)
             {
-                UnAllocatedProcesses.add(proVec.get(i));
-                System.out.println("process "+proVec.get(i).getProcessName()+" not allocated");
+                if(proVec.get(i).flag==false)
+                {
+                    UnAllocatedProcesses.add(proVec.get(i));
+                    System.out.println("process "+proVec.get(i).getProcessName()+" not allocated");
+                }
             }
         }
+
     }
 
 
@@ -95,14 +103,18 @@ public class Main {
                 }
             }
         }
-        for(int i=0;i<Pvector.size();i++)
+        if(Pvector != UnAllocatedProcesses)
         {
-            if(Pvector.get(i).flag==false)
+            for(int i=0;i<Pvector.size();i++)
             {
-                UnAllocatedProcesses.add(Pvector.get(i));
-                System.out.println("process "+Pvector.get(i).getProcessName()+" not allocated");
+                if(Pvector.get(i).flag==false)
+                {
+                    UnAllocatedProcesses.add(Pvector.get(i));
+                    System.out.println("process "+Pvector.get(i).getProcessName()+" not allocated");
+                }
             }
         }
+
     }
     public static void Compaction()
     {
@@ -210,6 +222,12 @@ public class Main {
             }
             else if(selector==3)
             {
+                maxPartitionSize = 0;
+                for(int i =0 ;i<partitionsVector.size() ;i++)
+                {
+                    if(partitionsVector.get(i).getPartitionSize() > maxPartitionSize && partitionsVector.get(i).getP() == null)
+                        maxPartitionSize = partitionsVector.get(i).getPartitionSize();
+                }
                 worstFit(maxPartitionSize,UnAllocatedProcesses);
             }
             else
@@ -228,12 +246,12 @@ public class Main {
     }
 }
 //6
-////p 90
-////p 20
-////p 5
-////p 30 p 120 p 80
-////4
-////pro1 15
-////pro2 90
-////pro3 30
-//// pro4 100
+//p 90
+//p 20
+//p 5
+//p 30 p 120 p 80
+//4
+//pro1 15
+//pro2 90
+//pro3 30
+// pro4 100
